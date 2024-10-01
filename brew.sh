@@ -26,3 +26,4 @@ brew install kubectx
 brew install kustomize
 brew install terraform@1.5.7
 brew install wget
+brew intall gh
