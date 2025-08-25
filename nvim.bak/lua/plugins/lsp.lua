@@ -34,13 +34,6 @@ return {
         vtsls = {
           settings = {
             typescript = {
-              maxTsServerMemory = 8192, -- Limit to 8GB
-              preferences = {
-                includePackageJsonAutoImports = "off",
-              },
-              workspaceSymbols = {
-                scope = "currentProject"
-              },
               inlayHints = {
                 enumMemberValues = { enabled = false },
                 functionLikeReturnTypes = { enabled = false },
@@ -51,25 +44,10 @@ return {
               },
             },
           },
-          root_dir = function(fname)
-            -- Find nearest package.json instead of workspace root
-            return require("lspconfig.util").find_package_json_ancestor(fname)
-          end
         },
         gopls = {
           settings = {
             gopls = {
-              directoryFilters = {
-                "-**/node_modules",
-                "-**/.git",
-                "-**/vendor",
-                "-**/target",
-                "-**/dist",
-                "-**/build"
-              },
-              templateExtensions = {},
-              staticcheck = false, -- Disable for large repos
-              gofumpt = false,
               hints = {
                 assignVariableTypes = false,
                 compositeLiteralFields = false,
