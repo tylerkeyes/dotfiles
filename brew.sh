@@ -1,4 +1,5 @@
 brew install kubectl
+
 brew install aws-iam-authenticator
 brew install atuin
 brew install colima
@@ -27,3 +28,11 @@ brew install kustomize
 brew install terraform@1.5.7
 brew install wget
 brew intall gh
+brew install stern
+brew install opa
+brew install k9s
+brew install kcat
+brew install bat
+brew install git-lfs
+brew install fd
+brew install ripgrep
