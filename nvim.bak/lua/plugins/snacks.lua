@@ -90,11 +90,11 @@ return {
             },
           } end
           if not Snacks.profiler.running() then
-
+            Snacks.notify("Profiler debug started")
             Snacks.profiler.start()
           else
             Snacks.profiler.debug()
-
+            Snacks.notify("Profiler debug stopped")
           end
         end,
       },

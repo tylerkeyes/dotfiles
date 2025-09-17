@@ -2,6 +2,9 @@ return {
   {
     "nvim-treesitter/nvim-treesitter",
     opts = {
+      -- Fix parser install directory to be in runtimepath
+      parser_install_dir = vim.fn.stdpath("data") .. "/site",
+
       ensure_installed = {
         "astro",
         "bash",
@@ -62,6 +65,12 @@ return {
         end,
       },
       config = function(_, opts)
+        -- Ensure parser install directory is in runtimepath
+        local parser_install_dir = opts.parser_install_dir
+        if parser_install_dir and not vim.tbl_contains(vim.opt.runtimepath:get(), parser_install_dir) then
+          vim.opt.runtimepath:append(parser_install_dir)
+        end
+
         require("nvim-treesitter.configs").setup(opts)
 
         -- MDX

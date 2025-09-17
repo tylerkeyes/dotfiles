@@ -1,16 +1,4 @@
 return {
-  -- {
-  --   "augmentcode/augment.vim",
-  --   cmd = { "Augment" },
-  -- },
-  {
-    "augmentcode/augment.vim",
-    event = { "InsertEnter", "BufReadPre" },
-    init = function()
-      vim.g.augment_log_file = vim.fn.stdpath("state") .. "/augment.log"
-      vim.g.augment_debug = false
-    end,
-  },
   {
     "folke/ts-comments.nvim",
     opts = {
@@ -28,7 +16,7 @@ return {
   -- },
 
   {
-    "nvim-mini/mini.align",
+    "echasnovski/mini.align",
     opts = {},
     keys = {
       { "ga", mode = { "n", "v" } },
@@ -50,12 +38,12 @@ return {
   --   opts = { use_default_keymaps = false, max_join_length = 150 },
   -- },
 
-  { "nvim-mini/mini.test", cond = vim.fn.isdirectory("tests") == 1 },
+  { "echasnovski/mini.test", cond = vim.fn.isdirectory("tests") == 1 },
 
   {
     "folke/lazydev.nvim",
     opts = function(_, opts)
-      opts.debug = false
+      opts.debug = true
       opts.runtime = "~/Software/neovim/runtime"
       vim.list_extend(opts.library, {
         -- { path = "wezterm-types", mods = { "wezterm" } },

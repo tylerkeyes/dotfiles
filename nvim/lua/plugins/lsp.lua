@@ -1,46 +1,91 @@
--- Disable "No information available" notification on hover
--- plus define border for hover window
-vim.lsp.handlers["textDocument/hover"] = function(_, result, ctx, config)
-  config = config
-    or {
-      border = {
-        { "╭", "Comment" },
-        { "─", "Comment" },
-        { "╮", "Comment" },
-        { "│", "Comment" },
-        { "╯", "Comment" },
-        { "─", "Comment" },
-        { "╰", "Comment" },
-        { "│", "Comment" },
-      },
-    }
-  config.focus_id = ctx.method
-  if not (result and result.contents) then
-    return
-  end
-  local markdown_lines = vim.lsp.util.convert_input_to_markdown_lines(result.contents)
-  markdown_lines = vim.lsp.util.trim_empty_lines(markdown_lines)
-  if vim.tbl_isempty(markdown_lines) then
-    return
-  end
-  return vim.lsp.util.open_floating_preview(markdown_lines, "markdown", config)
-end
-
+-- Safe LSP configuration with better error handling and server management
 return {
   {
     "neovim/nvim-lspconfig",
     opts = {
+      -- Global LSP settings
+      diagnostics = {
+        underline = true,
+        update_in_insert = false,
+        virtual_text = {
+          spacing = 4,
+          source = "if_many",
+          prefix = "●",
+        },
+        severity_sort = true,
+      },
+
+      -- Enhanced server setup with safety checks
+      setup = {
+        ["*"] = function(server, opts)
+          -- Add safety wrapper for all LSP servers
+          local original_on_attach = opts.on_attach
+          opts.on_attach = function(client, bufnr)
+            -- Wrap in pcall to prevent crashes
+            local ok, err = pcall(function()
+              if original_on_attach then
+                original_on_attach(client, bufnr)
+              end
+            end)
+            if not ok then
+              vim.notify("LSP on_attach error for " .. server .. ": " .. tostring(err), vim.log.levels.WARN)
+            end
+          end
+
+          -- Add error handler for server crashes
+          local original_on_error = opts.on_error
+          opts.on_error = function(err, result, ctx, config)
+            -- Filter out known protocol issues
+            if err and err.message then
+              local msg = err.message
+              if
+                msg:match("Content%-Length not found")
+                or msg:match("cannot resume dead coroutine")
+                or msg:match("Resolved node")
+                or msg:match("Using Hermetic NodeJS")
+              then
+                return -- Ignore these errors
+              end
+            end
+
+            if original_on_error then
+              original_on_error(err, result, ctx, config)
+            else
+              vim.notify("LSP error for " .. server .. ": " .. tostring(err), vim.log.levels.ERROR)
+            end
+          end
+
+          return opts
+        end,
+      },
+
       servers = {
+        -- Enhanced vtsls configuration with hnvm compatibility
         vtsls = {
+          enabled = true,
+          cmd_env = {
+            NO_COLOR = "1",
+            FORCE_COLOR = "0",
+            NODE_NO_WARNINGS = "1",
+            TERM = "dumb",
+            CI = "true",
+            CLICOLOR = "0",
+            CLICOLOR_FORCE = "0",
+            COLORTERM = "",
+            HNVM_QUIET = "true",  -- Suppress hnvm colored output
+          },
           settings = {
             typescript = {
-              maxTsServerMemory = 8192, -- Limit to 8GB
-              preferences = {
-                includePackageJsonAutoImports = "off",
+              inlayHints = {
+                enumMemberValues = { enabled = false },
+                functionLikeReturnTypes = { enabled = false },
+                parameterNames = { enabled = false },
+                parameterTypes = { enabled = false },
+                propertyDeclarationTypes = { enabled = false },
+                variableTypes = { enabled = false },
               },
-              workspaceSymbols = {
-                scope = "currentProject"
-              },
+            },
+            javascript = {
               inlayHints = {
                 enumMemberValues = { enabled = false },
                 functionLikeReturnTypes = { enabled = false },
@@ -51,36 +96,75 @@ return {
               },
             },
           },
-          root_dir = function(fname)
-            -- Find nearest package.json instead of workspace root
-            return require("lspconfig.util").find_package_json_ancestor(fname)
-          end
+          on_attach = function(client, bufnr)
+            -- Disable formatting to avoid conflicts
+            client.server_capabilities.documentFormattingProvider = false
+            client.server_capabilities.documentRangeFormattingProvider = false
+          end,
         },
-        gopls = {
+
+        -- Keep other TypeScript servers disabled to avoid conflicts
+        tsserver = { enabled = false },
+        ts_ls = { enabled = false },
+        denols = { enabled = false },
+        eslint = { enabled = false },
+        tsserver = { enabled = false },
+        denols = { enabled = false },
+        eslint = { enabled = false },
+
+        -- Only enable stable, essential LSP servers
+        lua_ls = {
           settings = {
-            gopls = {
-              directoryFilters = {
-                "-**/node_modules",
-                "-**/.git",
-                "-**/vendor",
-                "-**/target",
-                "-**/dist",
-                "-**/build"
+            Lua = {
+              workspace = {
+                checkThirdParty = false,
               },
-              templateExtensions = {},
-              staticcheck = false, -- Disable for large repos
-              gofumpt = false,
-              hints = {
-                assignVariableTypes = false,
-                compositeLiteralFields = false,
-                compositeLiteralTypes = false,
-                constantValues = false,
-                functionTypeParameters = false,
-                parameterNames = false,
-                rangeVariableTypes = false,
+              completion = {
+                callSnippet = "Replace",
               },
             },
           },
+        },
+
+        -- Safe JSON LSP configuration
+        jsonls = {
+          cmd_env = {
+            NO_COLOR = "1",
+            FORCE_COLOR = "0",
+            NODE_NO_WARNINGS = "1",
+            HNVM_QUIET = "true",  -- Suppress hnvm colored output
+          },
+          settings = {
+            json = {
+              schemas = require("schemastore").json.schemas(),
+              validate = { enable = true },
+            },
+          },
+          -- Only start for actual JSON files
+          filetypes = { "json", "jsonc" },
+          root_dir = function(fname)
+            return require("lspconfig.util").find_package_json_ancestor(fname) or vim.fn.getcwd()
+          end,
+        },
+
+        -- Safe Go LSP configuration
+        gopls = {
+          settings = {
+            gopls = {
+              analyses = {
+                unusedparams = false,
+                shadow = false,
+              },
+              staticcheck = false,
+              gofumpt = false,
+              semanticTokens = true,
+              usePlaceholders = true,
+              completeUnimported = false,
+              deepCompletion = false,
+              memoryMode = "DegradeClosed",
+            },
+          },
+          filetypes = { "go", "gomod", "gowork", "gotmpl" },
         },
       },
     },

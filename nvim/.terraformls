@@ -1,0 +1,20 @@
+# Terraform Language Server configuration
+# This helps prevent terraform-ls from overwhelming large projects
+
+# Exclude .terraform directories from processing
+exclude_paths = [
+  "**/.terraform/**",
+  "**/terraform.tfstate*",
+  "**/.terraform.lock.hcl"
+]
+
+# Disable expensive features for large projects
+experimental_features = {
+  validate_on_save = false
+  prefill_required_fields = false
+}
+
+# Limit validation to prevent performance issues
+validation = {
+  enable_enhanced_validation = false
+}

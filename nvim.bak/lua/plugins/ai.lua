@@ -21,7 +21,7 @@ return {
     event = "BufReadPre",
     opts = {
       provider = "copilot",
-
+      notify = "debug",
       n_completions = 1,
       add_single_line_entry = false,
       virtualtext = {
