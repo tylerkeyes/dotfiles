@@ -1,0 +1,124 @@
+tap "derailed/k9s"
+tap "fastrepl/hyprnote"
+tap "homebrew/services"
+tap "sst/tap"
+# GNU internationalization (i18n) and localization (l10n) library
+brew "gettext"
+# Distributed revision control system
+brew "git"
+# Extendable version manager with support for Ruby, Node.js, Erlang & more
+brew "asdf"
+# Improved shell history for zsh, bash, fish and nushell
+brew "atuin"
+# Cryptography and SSL/TLS Toolkit
+brew "openssl@3"
+# Clone of cat(1) with syntax highlighting and Git integration
+brew "bat"
+# Yet another cross-platform graphical process/system monitor
+brew "bottom"
+# Resource monitor. C++ version and continuation of bashtop and bpytop
+brew "btop"
+# Cross-platform make
+brew "cmake"
+# GNU File, Shell, and Text utilities
+brew "coreutils"
+# Get a file from an HTTP, HTTPS or FTP server
+brew "curl"
+# Secure runtime for JavaScript and TypeScript
+brew "deno"
+# Modern, maintained replacement for ls
+brew "eza"
+# Like neofetch, but much faster because written mostly in C
+brew "fastfetch"
+# Simple, fast and user-friendly alternative to find
+brew "fd"
+# Play, record, convert, and stream audio and video
+brew "ffmpeg"
+# Command-line fuzzy finder written in Go
+brew "fzf"
+# GitHub command-line tool
+brew "gh"
+# Render markdown on the CLI
+brew "glow"
+# Kubernetes package manager
+brew "helm"
+# Lightweight and flexible command-line JSON processor
+brew "jq"
+# Run local Kubernetes cluster in Docker
+brew "kind"
+# Tool that can switch between kubectl contexts easily and create aliases
+brew "kubectx"
+# YAML Parser
+brew "libyaml"
+# Fly through your shell history
+brew "mcfly"
+# High performance, distributed memory object caching system
+brew "memcached"
+# Fast, highly customisable system info script
+brew "neofetch"
+# Small build system for use with gyp or CMake
+brew "ninja"
+# Platform built on V8 to build network applications
+brew "node"
+# Package compiler and linker metadata toolkit
+brew "pkgconf"
+# Object-relational database system
+brew "postgresql@14"
+# Modern replacement for ps written in Rust
+brew "procs"
+# Generic machine emulator and virtualizer
+brew "qemu"
+# Perl-powered file rename script with many helpful built-ins
+brew "rename"
+# Search tool like grep and The Silver Searcher
+brew "ripgrep"
+# Intuitive find & replace CLI
+brew "sd"
+# Command-line interface for https://speedtest.net bandwidth tests
+brew "speedtest-cli"
+# Cross-shell prompt for astronauts
+brew "starship"
+# User interface to the TELNET protocol
+brew "telnet"
+# Simplified and community-driven man pages
+brew "tldr"
+# Terminal multiplexer
+brew "tmux"
+# Display directories as trees (with optional color/HTML output)
+brew "tree"
+# Incremental parsing library
+brew "tree-sitter"
+# Parser generator tool
+brew "tree-sitter-cli"
+# Command-line tool for sharing terminal over the web
+brew "ttyd"
+# Your CLI home video recorder
+brew "vhs"
+# Blazing fast terminal file manager written in Rust, based on async I/O
+brew "yazi"
+# Pluggable terminal workspace, with terminal multiplexer as the base feature
+brew "zellij"
+# Programming language designed for robustness, optimality, and clarity
+brew "zig"
+# Shell extension to navigate your filesystem faster
+brew "zoxide"
+# Kubernetes CLI To Manage Your Clusters In Style!
+brew "derailed/k9s/k9s"
+# OWhisper
+brew "fastrepl/hyprnote/owhisper"
+# The AI coding agent built for the terminal.
+brew "sst/tap/opencode"
+# GPU-accelerated terminal emulator
+cask "alacritty"
+# App to build and share containerised applications and microservices
+cask "docker-desktop"
+cask "font-fontawesome"
+# Terminal emulator that uses platform-native UI and GPU acceleration
+cask "ghostty"
+# Control your tools with a few keystrokes
+cask "raycast"
+vscode "bierner.markdown-mermaid"
+vscode "enkia.tokyo-night"
+vscode "golang.go"
+vscode "ms-vscode.makefile-tools"
+vscode "vscodevim.vim"

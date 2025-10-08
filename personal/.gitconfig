@@ -1,0 +1,51 @@
+[user]
+  email = tekeyes.20@gmail.com
+  name = Tyler Keyes
+
+[branch]
+  autosetuprebase = always
+
+[core]
+	editor = $EDITOR
+  pager = delta
+
+[color]
+  ui = auto
+
+[interactive]
+    diffFilter = delta --color-only
+
+[filter "lfs"]
+  clean = git-lfs clean -- %f
+  smudge = git-lfs smudge -- %f
+  required = true
+  process = git-lfs filter-process
+
+[pull]
+  rebase = true
+
+[push]
+  default = current
+
+[rebase]
+  autoStash = true 
+
+[init]
+	defaultBranch = main
+
+[delta]
+  navigate = true  # use n and N to move between diff sections
+  dark = true      # or light = true, or omit for auto-detection
+  line-numbers = true
+  side-by-side = true
+  syntax-theme = Dracula
+
+# Git-spice configuration (stacked diffs workflow)
+[spice "branchCheckout"]
+	showUntracked = true       # Show untracked files when checking out
+
+[spice "branchCreate"]
+	commit = false             # Don't auto-commit when creating branches
+
+[spice "submit"]
+	navigationComment = multiple  # Allow multiple navigation comments

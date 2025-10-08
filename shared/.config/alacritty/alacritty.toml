@@ -1,0 +1,26 @@
+import = ["~/.config/alacritty/tokyo-night/tokyo-night-storm.toml"]
+
+live_config_reload = true
+
+[env]
+TERM = "xterm-256color"
+
+[font]
+size = 16.0
+
+[font.bold]
+family = "GeistMono Nerd Font"
+style = "Heavy"
+
+[font.bold_italic]
+family = "GeistMono Nerd Font"
+style = "Heavy Italic"
+
+[font.italic]
+family = "GeistMono Nerd Font"
+style = "Medium Italic"
+
+[font.normal]
+family = "GeistMono Nerd Font"
+style = "Medium"
+
