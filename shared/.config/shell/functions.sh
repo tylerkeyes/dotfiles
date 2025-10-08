@@ -48,3 +48,17 @@ tmx() {
     exit
   fi
 }
+
+# Refresh terminal configuration
+refresh() {
+  if [ -n "$ZSH_VERSION" ]; then
+    source ~/.zshrc
+  fi
+  
+  if [ -n "$TMUX" ]; then
+    tmux source-file ~/.config/tmux/tmux.conf
+    echo "Terminal refreshed: zsh and tmux configurations reloaded"
+  else
+    echo "Terminal refreshed: zsh configuration reloaded"
+  fi
+}
