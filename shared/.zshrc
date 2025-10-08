@@ -70,8 +70,6 @@ source "$ZINIT_HOME/zinit.git/zinit.zsh"
 # -----------------------------
 # Plugins
 # -----------------------------
-zinit snippet OMZ::plugins/git/git.plugin.zsh
-
 zinit ice wait lucid
 zinit light zsh-users/zsh-autosuggestions
 

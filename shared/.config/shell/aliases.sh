@@ -47,6 +47,27 @@ alias gsr="gs repo"
 alias gsrs="gs repo sync"
 
 # Stack management
-alias gss="gs stack"
+alias gst="gs stack"
 alias gssr="gs stack restack"
 alias gsss="gs stack submit"
+
+alias k='kubectl'
+alias kgp='kubectl get pods'
+alias kgd='kubectl get deployments'
+alias kgs='kubectl get services'
+alias kgi='kubectl get ingress'
+alias kgc='kubectl get configmap'
+alias kdp='kubectl describe pod'
+alias kdn='kubectl describe node'
+alias kds='kubectl describe service'
+alias kl='kubectl logs'
+alias kgpa='kubectl get pods --all-namespaces'
+alias kgda='kubectl get deployments --all-namespaces'
+alias kgn='kubectl get nodes'
+alias kdn='kubectl describe node'
+alias kctx='kubectx'
+
+alias util='kubectl get nodes --no-headers | awk '\''{print $1}'\'' | xargs -I {} sh -c '\''echo {} ; kubectl describe node {} | grep Allocated -A 5 | grep -ve Event -ve Allocated -ve percent -ve -- ; echo '\'''
+
+alias cpualloc='util | grep % | awk '\''{print $1}'\'' | awk '\''{ sum += $1 } END { if (NR > 0) { print sum/(NR*20), "%\n" } }'\'''
+alias memalloc='util | grep % | awk '\''{print $5}'\'' | awk '\''{ sum += $1 } END { if (NR > 0) { print sum/(NR*75), "%\n" } }'\'''
