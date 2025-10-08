@@ -126,7 +126,8 @@ eval "$(fzf --zsh)"
 source <(kubectl completion zsh)
 
 source ~/.kuberc
-source ~/.gitrc
+# Added as an alias
+# source ~/.gitrc
 
 # -----------------------------
 # macOS Tweaks
