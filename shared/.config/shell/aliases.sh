@@ -13,6 +13,17 @@ alias ll="eza -l"
 alias la="eza -la"
 alias lt="eza --tree"
 
+alias g='git'
+alias gf='git fetch -tpP'
+alias gpull='git pull'
+alias gpush='git push'
+alias gpr='git pull --rebase'
+alias gc='git commit'
+alias gss='git status'
+alias ga='git add'
+alias gl='git log'
+alias gw='git worktree'
+
 # Git-spice workflow aliases
 # Branch management
 alias gsb="gs branch"

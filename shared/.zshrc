@@ -14,6 +14,29 @@ if [ -f "$HOME/.config/shell/exports.sh" ]; then
   . "$HOME/.config/shell/exports.sh"
 fi
 
+# Auto-source profile-specific aliases (aliases.*.sh)
+setopt null_glob
+for config_file in "$HOME/.config/shell/aliases-"*.sh; do
+  if [ -f "$config_file" ]; then
+    . "$config_file"
+  fi
+done
+
+# Auto-source profile-specific functions (functions.*.sh)
+for config_file in "$HOME/.config/shell/functions-"*.sh; do
+  if [ -f "$config_file" ]; then
+    . "$config_file"
+  fi
+done
+
+# Auto-source profile-specific exports (exports.*.sh)
+for config_file in "$HOME/.config/shell/exports-"*.sh; do
+  if [ -f "$config_file" ]; then
+    . "$config_file"
+  fi
+done
+unsetopt null_glob
+
 # -----------------------------
 # Path and Environment
 # -----------------------------
