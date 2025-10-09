@@ -52,3 +52,6 @@
 
 [merge]
     conflictStyle = zdiff3
+
+[alias]
+  ammend = commit -a --amend --no-edit
