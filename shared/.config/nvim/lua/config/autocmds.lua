@@ -3,6 +3,9 @@
 -- Add any additional autocmds here
 vim.cmd("colorscheme tokyonight-storm")
 
+-- Disable inlay hints globally to prevent 'col out of range' errors
+vim.lsp.inlay_hint.enable(false)
+
 -- Simple Bazel integration for Go files
 vim.api.nvim_create_autocmd("FileType", {
   pattern = "go",
