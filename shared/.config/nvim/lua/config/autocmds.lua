@@ -153,6 +153,6 @@ vim.api.nvim_create_autocmd("FileType", {
     end, vim.tbl_extend('force', opts, { desc = 'Show Bazel workspace status' }))
     
 
-  end,
-  desc = "Setup simple Bazel integration for Go files"
+   end,
+   desc = "Setup simple Bazel integration for Go files"
 })

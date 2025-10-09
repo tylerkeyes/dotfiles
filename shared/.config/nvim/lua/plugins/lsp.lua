@@ -2,8 +2,10 @@
 return {
   {
     "neovim/nvim-lspconfig",
+    lazy = false,
     opts = {
       -- Global LSP settings
+      inlay_hints = { enabled = false },
       diagnostics = {
         underline = true,
         update_in_insert = false,
@@ -72,7 +74,7 @@ return {
             CLICOLOR = "0",
             CLICOLOR_FORCE = "0",
             COLORTERM = "",
-            HNVM_QUIET = "true",  -- Suppress hnvm colored output
+            HNVM_QUIET = "true", -- Suppress hnvm colored output
           },
           settings = {
             typescript = {
@@ -132,7 +134,7 @@ return {
             NO_COLOR = "1",
             FORCE_COLOR = "0",
             NODE_NO_WARNINGS = "1",
-            HNVM_QUIET = "true",  -- Suppress hnvm colored output
+            HNVM_QUIET = "true", -- Suppress hnvm colored output
           },
           settings = {
             json = {

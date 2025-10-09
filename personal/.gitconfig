@@ -1,6 +1,6 @@
 [user]
-  email = tekeyes.20@gmail.com
-  name = Tyler Keyes
+	name = tylerkeyes
+	email = tyler.keyes00@gmail.com
 
 [branch]
   autosetuprebase = always
@@ -49,3 +49,6 @@
 
 [spice "submit"]
 	navigationComment = multiple  # Allow multiple navigation comments
+
+[merge]
+    conflictStyle = zdiff3

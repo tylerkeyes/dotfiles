@@ -25,9 +25,9 @@ require("lazy").setup({
     { import = "lazyvim.plugins.extras.test.core" },
     { import = "lazyvim.plugins.extras.ui.treesitter-context" },
     { import = "lazyvim.plugins.extras.editor.harpoon2" },
-    { import = "lazyvim.plugins.extras.editor.telescope" },
-    -- import/override with your plugins
-    { import = "plugins" },
+     { import = "lazyvim.plugins.extras.editor.telescope" },
+     -- import/override with your plugins
+     { import = "plugins" },
   },
   defaults = {
     -- Enable lazy loading for better performance in large projects

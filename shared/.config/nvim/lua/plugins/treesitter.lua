@@ -1,6 +1,7 @@
 return {
   {
     "nvim-treesitter/nvim-treesitter",
+    lazy = false,
     opts = {
       ensure_installed = {
         "astro",
@@ -71,6 +72,19 @@ return {
           },
         })
         vim.treesitter.language.register("markdown", "mdx")
+
+        -- Ensure Treesitter highlighting for files opened from file tree
+        vim.api.nvim_create_autocmd({ "BufReadPost", "BufNewFile" }, {
+          callback = function()
+            if vim.bo.filetype ~= "" and vim.bo.buftype == "" then
+              local bufnr = vim.api.nvim_get_current_buf()
+              pcall(function()
+                require("nvim-treesitter.configs").attach_module("highlight", bufnr)
+              end)
+            end
+          end,
+          desc = "Enable Treesitter highlighting for opened files"
+        })
       end,
     },
   },
