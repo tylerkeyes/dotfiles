@@ -7,6 +7,7 @@ return {
     opts = {
       bigfile = { enabled = true },
       picker = {
+        hidden = true,
         debug = { scores = false, leaks = false, explorer = true, files = true },
         sources = {
           files_with_symbols = {
