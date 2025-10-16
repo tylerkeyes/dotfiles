@@ -55,3 +55,6 @@
 
 [alias]
   ammend = commit -a --amend --no-edit
+
+[url "git@github.com:"]
+	insteadOf = https://github.com/
