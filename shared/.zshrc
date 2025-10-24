@@ -83,6 +83,10 @@ if [[ -n ~/.zcompdump(#qN.mh+24) ]]; then
 else
   compinit
 fi
+
+# Case-insensitive completion
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
+
 zinit ice wait lucid
 zinit light zsh-users/zsh-completions
 
