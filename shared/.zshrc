@@ -54,7 +54,7 @@ alias vim="nvim"
 alias vi="nvim"
 
 # Auto-start tmux if available
-auto_start_tmux
+# auto_start_tmux
 
 # -----------------------------
 # Zinit Setup
@@ -125,27 +125,60 @@ fi
 
 eval "$(atuin init zsh)"
 eval "$(fzf --zsh)"
-source <(kubectl completion zsh)
+
+# Kubernetes completion (cached)
+if command -v kubectl >/dev/null 2>&1; then
+  mkdir -p ~/.zsh_completions
+  if [ ! -f ~/.zsh_completions/_kubectl ]; then
+    kubectl completion zsh > ~/.zsh_completions/_kubectl
+  fi
+  fpath+=~/.zsh_completions
+fi
 
 source ~/.kuberc
 # Added as an alias
 # source ~/.gitrc
 
 # -----------------------------
-# macOS Tweaks
-# -----------------------------
-# Set a blazingly fast keyboard repeat rate
-defaults write NSGlobalDomain KeyRepeat -int 1
-defaults write NSGlobalDomain InitialKeyRepeat -int 15
-defaults write NSGlobalDomain ApplePressAndHoldEnabled -bool false
-
-# -----------------------------
-# Envman and NVM
+# Envman
 # -----------------------------
 [ -s "$HOME/.config/envman/load.sh" ] && source "$HOME/.config/envman/load.sh"
 
+# -----------------------------
+# NVM (Lazy-loaded)
+# -----------------------------
 export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+# Lazy-load NVM on first use
+nvm() {
+  unset -f nvm
+  [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+  [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+  nvm "$@"
+}
+
+# Also lazy-load on node/npm/npx invocation
+node() {
+  unset -f node npm npx
+  [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+  [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+  node "$@"
+}
+
+npm() {
+  unset -f node npm npx
+  [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+  [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+  npm "$@"
+}
+
+npx() {
+  unset -f node npm npx
+  [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+  [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+  npx "$@"
+}
+
+# Certificate settings
 export AWS_CA_BUNDLE="/Users/tyler.keyes/.mdm/certificates/combined-ca-bundle.pem"
 export NODE_EXTRA_CA_CERTS="/Users/tyler.keyes/.mdm/certificates/combined-ca-bundle.pem"

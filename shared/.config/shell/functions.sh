@@ -54,11 +54,26 @@ refresh() {
   if [ -n "$ZSH_VERSION" ]; then
     source ~/.zshrc
   fi
-  
+
   if [ -n "$TMUX" ]; then
     tmux source-file ~/.config/tmux/tmux.conf
     echo "Terminal refreshed: zsh and tmux configurations reloaded"
   else
     echo "Terminal refreshed: zsh configuration reloaded"
   fi
+}
+
+# Authenticate AWS SSO
+awsauth() {
+  aws-sso-util login --profile default
+  yawsso --default
+}
+
+# Initialize macOS system settings (one-time setup)
+init_macos_settings() {
+  # Set a blazingly fast keyboard repeat rate
+  defaults write NSGlobalDomain KeyRepeat -int 1
+  defaults write NSGlobalDomain InitialKeyRepeat -int 15
+  defaults write NSGlobalDomain ApplePressAndHoldEnabled -bool false
+  echo "macOS keyboard settings initialized"
 }
