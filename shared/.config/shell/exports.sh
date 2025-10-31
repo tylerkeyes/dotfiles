@@ -14,18 +14,25 @@ export EZA_CONFIG_DIR="$XDG_CONFIG_HOME/eza"
 # Fuzzy finder configuration
 export FZF_DEFAULT_COMMAND="fd --type f --hidden --follow --exclude={.git,OrbStack}"
 
-# Package managers and version managers
-export PATH="/opt/homebrew/bin:$PATH"
-export PATH="$HOME/.bun/bin:$PATH"
-export PATH="$HOME/.cargo/bin:$PATH"
+# Goenv version manager (must be initialized FIRST before other version managers)
+# Initialize goenv to manage Go versions via .go-version files
+if command -v goenv >/dev/null 2>&1; then
+  eval "$(goenv init -)"
+fi
+
+# ASDF version manager
+export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"
 
 # Custom bin directories
 export PATH="$HOME/bin:$PATH"
 export PATH="$HOME/go/bin:$PATH"
 export PATH="$HOME/.local/bin:$PATH"
 
-# ASDF version manager
-export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"
+# Package managers and version managers
+# Note: Removed /opt/homebrew/bin from this section - use goenv for Go, not brew
+export PATH="/opt/homebrew/bin:$PATH"
+export PATH="$HOME/.bun/bin:$PATH"
+export PATH="$HOME/.cargo/bin:$PATH"
 
 # PNPM package manager
 export PNPM_HOME="$HOME/Library/pnpm"
