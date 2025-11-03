@@ -182,3 +182,6 @@ npx() {
 # Certificate settings
 export AWS_CA_BUNDLE="/Users/tyler.keyes/.mdm/certificates/combined-ca-bundle.pem"
 export NODE_EXTRA_CA_CERTS="/Users/tyler.keyes/.mdm/certificates/combined-ca-bundle.pem"
+
+export AWS_CA_BUNDLE="/Users/tyler.keyes/.mdm/certificates/combined-ca-bundle.pem"
+export NODE_EXTRA_CA_CERTS="/Users/tyler.keyes/.mdm/certificates/combined-ca-bundle.pem"
