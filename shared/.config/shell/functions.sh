@@ -65,8 +65,7 @@ refresh() {
 
 # Authenticate AWS SSO
 awsauth() {
-  aws-sso-util login --profile default
-  yawsso --default
+  aws-sso-util configure populate --region us-east-1
 }
 
 # Initialize macOS system settings (one-time setup)

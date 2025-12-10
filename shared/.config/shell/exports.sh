@@ -16,28 +16,30 @@ export FZF_DEFAULT_COMMAND="fd --type f --hidden --follow --exclude={.git,OrbSta
 
 # Goenv version manager (must be initialized FIRST before other version managers)
 # Initialize goenv to manage Go versions via .go-version files
+export GOENV_ROOT="${GOENV_ROOT:-$HOME/.goenv}"
 if command -v goenv >/dev/null 2>&1; then
   eval "$(goenv init -)"
+  # Explicitly ensure goenv shims are at the front of PATH
+  export PATH="${GOENV_ROOT}/shims:${PATH}"
 fi
 
 # ASDF version manager
-export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"
+export PATH="$PATH:${ASDF_DATA_DIR:-$HOME/.asdf}/shims"
 
 # Custom bin directories
-export PATH="$HOME/bin:$PATH"
-export PATH="$HOME/go/bin:$PATH"
-export PATH="$HOME/.local/bin:$PATH"
+export PATH="$PATH:$HOME/bin"
+export PATH="$PATH:$HOME/go/bin"
+export PATH="$PATH:$HOME/.local/bin"
 
 # Package managers and version managers
-# Note: Removed /opt/homebrew/bin from this section - use goenv for Go, not brew
-export PATH="/opt/homebrew/bin:$PATH"
-export PATH="$HOME/.bun/bin:$PATH"
-export PATH="$HOME/.cargo/bin:$PATH"
+export PATH="$PATH:$HOME/.bun/bin"
+export PATH="$PATH:$HOME/.cargo/bin"
+export PATH="$PATH:/opt/homebrew/bin"
 
 # PNPM package manager
 export PNPM_HOME="$HOME/Library/pnpm"
 if [[ ":$PATH:" != *":$PNPM_HOME:"* ]]; then
-  export PATH="$PNPM_HOME:$PATH"
+  export PATH="$PATH:$PNPM_HOME"
 fi
 
 # Source personal environment file if it exists

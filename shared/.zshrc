@@ -41,11 +41,11 @@ unsetopt null_glob
 # Path and Environment
 # -----------------------------
 # export MANPATH="/usr/local/man:$MANPATH"
-export PATH=$PATH:$(go env GOPATH)/bin
+# Go path is already handled in shared exports.sh via goenv
 export PATH=$PATH:$HOME/software/istio-1.25.0/bin
 # export PATH="/opt/homebrew/opt/ruby/bin:$PATH"
 export BAT_THEME="base16"
-export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"
+# ASDF shims are already handled in shared exports.sh
 
 # -----------------------------
 # Aliases
