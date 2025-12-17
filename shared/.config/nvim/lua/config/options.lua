@@ -12,7 +12,8 @@ vim.g.lazyvim_typescript_lsp = "vtsls" -- Use vtsls with enhanced hnvm parsing
 vim.g.lazyvim_eslint_lsp = false -- Keep ESLint disabled for now
 
 -- Ensure Node.js is available for LSP servers by setting PATH
-vim.env.PATH = "/opt/homebrew/bin:" .. vim.env.PATH
+-- Keep goenv shims at the front for proper Go version management
+vim.env.PATH = (os.getenv("GOENV_ROOT") or os.path.expanduser("~/.goenv")) .. "/shims:" .. "/opt/homebrew/bin:" .. vim.env.PATH
 
 -- Disable colored output for Node.js-based LSP servers and all tools
 vim.env.NO_COLOR = "1"
