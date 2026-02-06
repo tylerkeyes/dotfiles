@@ -56,6 +56,15 @@ alias vi="nvim"
 # Auto-start tmux if available
 # auto_start_tmux
 
+# Kubernetes completion (cached)
+if command -v kubectl >/dev/null 2>&1; then
+  mkdir -p ~/.zsh_completions
+  if [ ! -f ~/.zsh_completions/_kubectl ]; then
+    kubectl completion zsh > ~/.zsh_completions/_kubectl
+  fi
+  fpath+=~/.zsh_completions
+fi
+
 # -----------------------------
 # Zinit Setup
 # -----------------------------
@@ -126,14 +135,7 @@ fi
 eval "$(atuin init zsh)"
 eval "$(fzf --zsh)"
 
-# Kubernetes completion (cached)
-if command -v kubectl >/dev/null 2>&1; then
-  mkdir -p ~/.zsh_completions
-  if [ ! -f ~/.zsh_completions/_kubectl ]; then
-    kubectl completion zsh > ~/.zsh_completions/_kubectl
-  fi
-  fpath+=~/.zsh_completions
-fi
+
 
 source ~/.kuberc
 # Added as an alias

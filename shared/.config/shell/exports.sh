@@ -18,9 +18,15 @@ export FZF_DEFAULT_COMMAND="fd --type f --hidden --follow --exclude={.git,OrbSta
 # Initialize goenv to manage Go versions via .go-version files
 export GOENV_ROOT="${GOENV_ROOT:-$HOME/.goenv}"
 if command -v goenv >/dev/null 2>&1; then
-  eval "$(goenv init -)"
   # Explicitly ensure goenv shims are at the front of PATH
   export PATH="${GOENV_ROOT}/shims:${PATH}"
+  
+  # Lazy-load goenv on first use
+  goenv() {
+    unset -f goenv
+    eval "$(command goenv init -)"
+    goenv "$@"
+  }
 fi
 
 # ASDF version manager
