@@ -56,3 +56,7 @@ fi
 if [[ "$TERM_PROGRAM" == "ghostty" ]]; then
   export TERM=xterm-256color
 fi
+
+# Docker/Colima configuration
+export COLIMA_HOME="$HOME/.config/colima"
+export DOCKER_HOST="unix://$COLIMA_HOME/default/docker.sock"
