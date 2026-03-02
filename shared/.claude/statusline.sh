@@ -69,6 +69,14 @@ if [ "$IS_GIT_REPO" = true ]; then
   fi
 fi
 
-# Output format: [Model] [percentage] 📁 directory  branch
-# Use ANSI color codes: cyan for model, white for directory, green for branch
-echo -e "\033[36m🤖 $MODEL_DISPLAY\033[0m$CONTEXT_PERCENT \033[37m📁 $DIR_NAME\033[0m$GIT_BRANCH"
+# Extract session cost
+COST_DISPLAY=""
+COST=$(echo "$input" | jq -r '.cost.total_cost_usd // empty')
+if [ -n "$COST" ] && [ "$COST" != "null" ] && [ "$COST" != "0" ]; then
+  COST_FMT=$(printf '%.4f' "$COST")
+  COST_DISPLAY=" \033[35m💰 \$${COST_FMT}\033[0m"
+fi
+
+# Output format: [Model] [percentage] 📁 directory  branch  cost
+# Use ANSI color codes: cyan for model, white for directory, green for branch, magenta for cost
+echo -e "\033[36m🤖 $MODEL_DISPLAY\033[0m$CONTEXT_PERCENT \033[37m📁 $DIR_NAME\033[0m$GIT_BRANCH$COST_DISPLAY"
