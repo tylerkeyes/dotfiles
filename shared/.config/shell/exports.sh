@@ -15,18 +15,12 @@ export EZA_CONFIG_DIR="$XDG_CONFIG_HOME/eza"
 export FZF_DEFAULT_COMMAND="fd --type f --hidden --follow --exclude={.git,OrbStack}"
 
 # Goenv version manager (must be initialized FIRST before other version managers)
-# Initialize goenv to manage Go versions via .go-version files
 export GOENV_ROOT="${GOENV_ROOT:-$HOME/.goenv}"
+export PATH="${GOENV_ROOT}/bin:${GOENV_ROOT}/shims:${PATH}"
+# Run goenv init eagerly — lazy-loading breaks subprocesses (gopls, etc.)
+# because they inherit the environment but never trigger the lazy loader.
 if command -v goenv >/dev/null 2>&1; then
-  # Explicitly ensure goenv shims are at the front of PATH
-  export PATH="${GOENV_ROOT}/shims:${PATH}"
-  
-  # Lazy-load goenv on first use
-  goenv() {
-    unset -f goenv
-    eval "$(command goenv init -)"
-    goenv "$@"
-  }
+  eval "$(goenv init -)"
 fi
 
 # ASDF version manager

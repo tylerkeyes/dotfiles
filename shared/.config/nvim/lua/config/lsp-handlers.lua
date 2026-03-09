@@ -213,8 +213,8 @@ function M.setup()
       vim.notify("vim.fs.root received invalid source argument: " .. vim.inspect(source), vim.log.levels.WARN)
       return nil
     end
-    -- Ensure marker is a string or table
-    if marker and type(marker) ~= "string" and type(marker) ~= "table" then
+    -- Ensure marker is a string, table, or function (nvim 0.10+ supports function markers)
+    if marker and type(marker) ~= "string" and type(marker) ~= "table" and type(marker) ~= "function" then
       vim.notify("vim.fs.root received invalid marker argument: " .. vim.inspect(marker), vim.log.levels.WARN)
       return nil
     end
@@ -350,7 +350,8 @@ function M.setup()
     end
   end
 
-  -- Set LSP log level to reduce noise
+  -- Keep log level at WARN to capture real errors (like gopls "no views") while
+  -- avoiding the terraform-ls/tflint stderr spam that previously caused lsp.log to balloon.
   vim.lsp.set_log_level("WARN")
 end
 
