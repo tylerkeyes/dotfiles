@@ -3,18 +3,22 @@ local M = {}
 
 -- Filter out common LSP startup noise and protocol errors
 local function filter_lsp_noise(err, result, ctx, config)
-  if not result then return end
+  if not result then
+    return
+  end
 
   local message = result.message or (result.params and result.params.message) or ""
 
   -- Filter out Node.js version messages and ANSI color codes
-  if message:match("Resolved node") or
-     message:match("Using Hermetic NodeJS") or
-     message:match("Content%-Length not found") or
-     message:match("^%[%d+;%d+m") or -- ANSI color codes
-     message:match("%[%d+m") or      -- More ANSI patterns
-     message:match("\\u001b%[") or   -- Unicode escape sequences
-     message:match("\27%[") then     -- Escape character patterns
+  if
+    message:match("Resolved node")
+    or message:match("Using Hermetic NodeJS")
+    or message:match("Content%-Length not found")
+    or message:match("^%[%d+;%d+m") -- ANSI color codes
+    or message:match("%[%d+m") -- More ANSI patterns
+    or message:match("\\u001b%[") -- Unicode escape sequences
+    or message:match("\27%[")
+  then -- Escape character patterns
     return
   end
 
@@ -24,7 +28,7 @@ end
 -- Setup enhanced error handlers
 function M.setup()
   -- CRITICAL: Direct override of vim.lsp.rpc.parse_chunk before any LSP starts
-  local rpc_module = require('vim.lsp.rpc')
+  local rpc_module = require("vim.lsp.rpc")
   if rpc_module.parse_chunk then
     local original_parse_chunk = rpc_module.parse_chunk
     rpc_module.parse_chunk = function(chunk)
@@ -51,11 +55,7 @@ function M.setup()
             elseif found_content_length then
               -- We're in LSP content, keep everything
               table.insert(lines, line)
-            elseif not (
-              line:match("Resolved node") or
-              line:match("Using Hermetic NodeJS") or
-              line:match("^%s*$")
-            ) then
+            elseif not (line:match("Resolved node") or line:match("Using Hermetic NodeJS") or line:match("^%s*$")) then
               -- Keep non-hnvm lines
               table.insert(lines, line)
             end
@@ -116,11 +116,9 @@ function M.setup()
                 table.insert(lines, line)
               elseif in_lsp_content then
                 table.insert(lines, line)
-              elseif not (
-                line:match("Resolved node") or
-                line:match("Using Hermetic NodeJS") or
-                line:match("^%s*$")
-              ) then
+              elseif
+                not (line:match("Resolved node") or line:match("Using Hermetic NodeJS") or line:match("^%s*$"))
+              then
                 -- Keep non-hnvm lines that might be LSP content
                 table.insert(lines, line)
               end
@@ -149,7 +147,7 @@ function M.setup()
   -- Add safety wrapper for vim.fs.joinpath to prevent table.concat errors
   local original_joinpath = vim.fs.joinpath
   vim.fs.joinpath = function(...)
-    local args = {...}
+    local args = { ... }
     local safe_args = {}
 
     -- Process each argument safely
@@ -248,7 +246,10 @@ function M.setup()
   if vim.lsp.rpc and vim.lsp.rpc.start then
     local original_rpc_start = vim.lsp.rpc.start
     vim.lsp.rpc.start = function(cmd, cmd_args, dispatchers, extra_spawn_params)
-      if dispatchers and dispatchers.on_data then
+      -- Only apply aggressive filtering to Node.js-based LSPs (TypeScript)
+      local is_node_lsp = cmd and type(cmd) == "table" and cmd[1] and cmd[1]:match("node")
+
+      if dispatchers and dispatchers.on_data and is_node_lsp then
         local original_on_data = dispatchers.on_data
         dispatchers.on_data = function(chunk)
           if type(chunk) == "string" and chunk ~= "" then
@@ -269,11 +270,9 @@ function M.setup()
                 table.insert(lines, line)
               elseif has_lsp_content then
                 table.insert(lines, line)
-              elseif not (
-                line:match("Resolved node") or
-                line:match("Using Hermetic NodeJS") or
-                line:match("^%s*$")
-              ) then
+              elseif
+                not (line:match("Resolved node") or line:match("Using Hermetic NodeJS") or line:match("^%s*$"))
+              then
                 table.insert(lines, line)
               end
             end
@@ -303,55 +302,6 @@ function M.setup()
   -- Allow hnvm to work normally but ensure LSP can handle its output
   -- We don't override vim.system here since we want hnvm to function
   -- The RPC parser above handles the colored output properly
-
-  -- Override vim.lsp.rpc.start to intercept and clean LSP communication
-  if vim.lsp.rpc and vim.lsp.rpc.start then
-    local original_rpc_start = vim.lsp.rpc.start
-    vim.lsp.rpc.start = function(cmd, cmd_args, dispatchers, extra_spawn_params)
-      -- Create a wrapper for the dispatchers to clean incoming data
-      local wrapped_dispatchers = {}
-      if dispatchers then
-        for k, v in pairs(dispatchers) do
-          if k == "on_data" and type(v) == "function" then
-            wrapped_dispatchers[k] = function(chunk)
-              if type(chunk) == "string" then
-                -- Clean the chunk before processing
-                local cleaned = chunk
-                -- Remove ANSI escape sequences
-                cleaned = cleaned:gsub("\27%[[0-9;]*[mK]", "")
-                cleaned = cleaned:gsub("\27%[[0-9;]*[A-Za-z]", "")
-                -- Remove Node.js startup messages
-                cleaned = cleaned:gsub("^[^\r\n]*Resolved node[^\r\n]*[\r\n]*", "")
-                cleaned = cleaned:gsub("^[^\r\n]*Using Hermetic NodeJS[^\r\n]*[\r\n]*", "")
-
-                -- Only pass clean data to the original handler
-                if cleaned ~= chunk then
-                  -- Data was cleaned, check if it's still valid
-                  if cleaned:match("Content%-Length:") then
-                    return v(cleaned)
-                  else
-                    -- Skip this chunk if it doesn't contain valid LSP data
-                    return
-                  end
-                else
-                  return v(chunk)
-                end
-              else
-                return v(chunk)
-              end
-            end
-          else
-            wrapped_dispatchers[k] = v
-          end
-        end
-      end
-
-      return original_rpc_start(cmd, cmd_args, wrapped_dispatchers, extra_spawn_params)
-    end
-  end
-
-  -- Keep log level at WARN to capture real errors (like gopls "no views") while
-  -- avoiding the terraform-ls/tflint stderr spam that previously caused lsp.log to balloon.
   vim.lsp.set_log_level("WARN")
 end
 

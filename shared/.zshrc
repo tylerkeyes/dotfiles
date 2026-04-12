@@ -180,3 +180,8 @@ npx() {
   [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
   npx "$@"
 }
+
+# Entire CLI shell completion
+autoload -Uz compinit && compinit && source <(entire completion zsh)
+
+export PATH="/Users/tylerkeyes/.pixi/bin:$PATH"
