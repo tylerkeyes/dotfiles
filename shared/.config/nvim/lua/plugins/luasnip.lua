@@ -12,23 +12,22 @@ return {
       end,
     },
     {
-      "nvim-cmp",
-      dependencies = {
-        "saadparwaiz1/cmp_luasnip",
+      "saghen/blink.cmp",
+      optional = true,
+      opts = {
+        snippets = {
+          preset = "luasnip",
+        },
       },
-      opts = function(_, opts)
-        opts.snippet = {
-          expand = function(args)
-            require("luasnip").lsp_expand(args.body)
-          end,
-        }
-        table.insert(opts.sources, { name = "luasnip" })
-      end,
     },
   },
   opts = {
     history = true,
     region_check_events = "InsertEnter",
     delete_check_events = "TextChanged,InsertLeave",
+  },
+  keys = {
+    { "<Tab>", function() require("luasnip").jump(1) end, mode = "s" },
+    { "<S-Tab>", function() require("luasnip").jump(-1) end, mode = { "i", "s" } },
   },
 }
