@@ -34,6 +34,7 @@ return {
         "query",
         "regex",
         "sql",
+        "terraform",
         "toml",
         "tsx",
         "typescript",

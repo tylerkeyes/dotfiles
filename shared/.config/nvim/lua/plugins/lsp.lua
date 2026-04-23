@@ -56,8 +56,6 @@ return {
               vim.notify("LSP error for " .. server .. ": " .. tostring(err), vim.log.levels.ERROR)
             end
           end
-
-          return opts
         end,
       },
 
@@ -146,6 +144,29 @@ return {
           filetypes = { "json", "jsonc" },
           root_dir = function(fname)
             return require("lspconfig.util").find_package_json_ancestor(fname) or vim.fn.getcwd()
+          end,
+        },
+
+        terraformls = {
+          -- root_dir uses Neovim 0.11+ async callback signature (bufnr, on_dir)
+          -- Scope to the file's immediate directory to prevent terraform-ls from
+          -- walking .terraform/modules/** which causes editor freezes.
+          root_dir = function(bufnr, on_dir)
+            on_dir(vim.fs.dirname(vim.api.nvim_buf_get_name(bufnr)))
+          end,
+          on_attach = function(client, bufnr)
+            -- Disable semantic tokens: terraform-ls fires these immediately on attach
+            -- and they require loading full provider schemas, which causes freezes.
+            client.server_capabilities.semanticTokensProvider = nil
+
+            -- Skip very large files to avoid freezes (e.g. generated/vendored .tf)
+            local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(bufnr))
+            if ok and stats and stats.size > 500 * 1024 then
+              vim.schedule(function()
+                vim.lsp.buf_detach_client(bufnr, client.id)
+                vim.notify("terraform-ls: skipping large file (>500KB)", vim.log.levels.WARN)
+              end)
+            end
           end,
         },
 

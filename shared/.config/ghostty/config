@@ -5,7 +5,7 @@ clipboard-read = allow
 clipboard-write = allow
 
 theme = tokyonight
-font-family = GeistMono Nerd Font Mono
+font-family = "JetBrains Mono"
 font-size = 14
 font-thicken = true
 quick-terminal-animation-duration = 0.15
